@@ -62,6 +62,7 @@ static const vector<string> knownCommands = {
   // "analyze",
   "lz-analyze",
   "kata-analyze",
+  "kgs-chat",
 
   //Stop any ongoing ponder or analyze
   "stop",
@@ -1213,10 +1214,12 @@ int MainCmds::gtp(int argc, const char* const* argv) {
     }
 
     else if(command == "name") {
-      response = "KataGo";
+      //response = "KataGo";
+      response = "versiononly";
     }
 
     else if(command == "version") {
+      response = "After the age of 100 I'll still play go. After the age of 200 I'll still play go in the universe. Send me a PM for wisdom.";
       if(overrideVersion.size() > 0)
         response = overrideVersion;
       else
@@ -1887,6 +1890,44 @@ int MainCmds::gtp(int argc, const char* const* argv) {
         suppressResponse = true;
         currentlyAnalyzing = true;
       }
+    }
+
+    else if(command == "kgs-chat") {
+      const int max_buffer = 500;
+      char buffer[max_buffer];
+      
+      /*
+      if (engine->bot->getRootBoard().isEmpty()) {
+          response = "Hi! Want to play with me?";
+      } else {
+        stringstream ss;
+  
+        ReportedSearchValues values = engine->bot->getSearch()->getRootValuesAssertSuccess();
+        double expectedScore = values.expectedScore;
+        int64_t visits = engine->bot->getSearch()->getRootVisits();
+        double winrate = 0.5 * (1.0 + (values.winValue - values.lossValue));
+        //Print winrate from desired perspective
+        if(perspective == P_WHITE || (perspective != P_BLACK && perspective != P_WHITE && engine->bot->getRootPla() == P_WHITE)) {
+          winrate = 1.0 - winrate;
+          expectedScore = -expectedScore;
+        }
+        ss << "After " << visits << " thoughts I think I have a "
+           << Global::strprintf("%.1f%%", winrate * 100.0)
+           << " chance of winning. ";
+        //ss << "Visits: " << visits
+        //   << "  Winrate: " << Global::strprintf("%.2f%%", winrate * 100.0)
+        //   << "  ScoreMean: " << Global::strprintf("%.1f", expectedScore)
+        //   << "  ScoreStdev: " << Global::strprintf("%.1f", values.expectedScoreStdev);
+        response = ss.str();
+      }
+
+      response += "   ";
+      */
+      FILE* pipe = popen("/usr/games/fortune | tr '\\n' ' ' | sed 's/[[:space:]]\\+/ /g'", "r");
+      while (fgets(buffer, sizeof buffer, pipe) != NULL) {
+        response += buffer;
+      }
+      pclose(pipe);
     }
 
     else if(command == "stop") {
