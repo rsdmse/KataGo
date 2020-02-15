@@ -1220,10 +1220,12 @@ int MainCmds::gtp(int argc, const char* const* argv) {
 
     else if(command == "version") {
       response = "After the age of 100 I'll still play go. After the age of 200 I'll still play go in the universe. Send me a PM for wisdom.";
+      /*
       if(overrideVersion.size() > 0)
         response = overrideVersion;
       else
         response = Version::getKataGoVersion();
+      */
     }
 
     else if(command == "known_command") {
